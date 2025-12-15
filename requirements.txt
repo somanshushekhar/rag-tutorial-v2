@@ -1,5 +1,10 @@
-pypdf
-langchain
-chromadb # Vector storage
-pytest
-boto3
+pypdf==3.13.0
+langchain==0.1.0
+chromadb==0.3.27
+pytest==7.4.0
+langchain-community==0.0.14
+ollama==0.1.0
+boto3==1.28.0
+
+# Note: Depending on packaging changes, you may need to install ollama python client
+# or the specific langchain community package for Ollama in your environment.
