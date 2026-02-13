@@ -1,4 +1,38 @@
+# Python
 *.pyc
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
 .DS_Store
-backup
-chroma
+Thumbs.db
+
+# Project specific
+backup/
+chroma/
+data/*.pdf
+*.log
+
+# Test files
+.pytest_cache/
+.coverage
+htmlcov/
+/.vs
