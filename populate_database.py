@@ -7,7 +7,6 @@ from typing import List
 from dataclasses import dataclass
 from get_embedding_function import get_embedding_function
 import chromadb
-from chromadb.config import Settings
 
 CHROMA_PATH = "chroma"
 DATA_PATH = "data"
@@ -36,7 +35,7 @@ def main():
 
 
 def load_documents() -> List[SimpleDocument]:
-    # Lightweight PDF loader using pypdf to avoid importing langchain_community loaders.
+    
     docs: List[SimpleDocument] = []
     data_dir = Path(DATA_PATH)
     if not data_dir.exists():
@@ -82,8 +81,7 @@ def split_documents(documents: List[SimpleDocument], chunk_size: int = 800, chun
 
 def add_to_chroma(chunks: List[SimpleDocument]):
     # Initialize chromadb client with persistence.
-    settings = Settings(chroma_db_impl="duckdb+parquet", persist_directory=CHROMA_PATH)
-    client = chromadb.Client(settings=settings)
+    client = chromadb.PersistentClient(path=CHROMA_PATH)
     collection = client.get_or_create_collection(name="documents")
 
     # Calculate IDs for chunks.
@@ -102,14 +100,19 @@ def add_to_chroma(chunks: List[SimpleDocument]):
     new_texts = []
     new_metadatas = []
     new_ids = []
+    skipped_count = 0
 
     for chunk in chunks_with_ids:
         cid = chunk.metadata.get("id")
         if cid in existing_ids:
+            skipped_count += 1
             continue
         new_texts.append(chunk.page_content)
         new_metadatas.append(chunk.metadata)
         new_ids.append(cid)
+
+    print(f"Skipped {skipped_count} existing chunks")
+    print(f"Adding {len(new_texts)} new chunks")
 
     if not new_texts:
         print("✅ No new documents to add")
@@ -136,12 +139,7 @@ def add_to_chroma(chunks: List[SimpleDocument]):
 
         collection.add(documents=batch_texts, metadatas=batch_metadatas, ids=batch_ids, embeddings=batch_embeddings)
 
-    # Persist client (some Chroma clients persist automatically; call persist if available)
-    try:
-        client.persist()
-    except Exception:
-        pass
-
+    # ChromaDB 0.4+ automatically persists with PersistentClient
     print(f"👉 Added new documents: {len(new_texts)}")
 
 

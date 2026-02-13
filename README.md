@@ -1,98 +1,158 @@
-# rag-tutorial-v2
+# ?? Aflac Assist Chat
 
-A minimal Retrieval-Augmented Generation (RAG) tutorial project using LangChain and ChromaDB. The repository shows how to:
+A Retrieval-Augmented Generation (RAG) chatbot built with FastAPI, ChromaDB, and Ollama for intelligent document Q&A.
 
-- Extract text from PDFs and chunk it for vector indexing (`populate_database.py`).
-- Index embeddings with ChromaDB and query the index (`query_data.py`).
-- Run simple automated checks against expected answers (`test_rag.py`).
+## ?? Features
 
-## Prerequisites
+- **?? PDF Upload & Ingestion**: Upload multiple PDFs and automatically index them
+- **?? Real-time Chat Interface**: Modern, responsive chat UI with streaming responses
+- **?? Semantic Search**: Uses vector embeddings for accurate document retrieval
+- **?? AI-Powered Answers**: Leverages local LLMs via Ollama
+- **?? Source Citations**: Shows which documents were used to generate answers
+- **?? Incremental Updates**: Add new documents without resetting the entire database
+- **?? Beautiful UI**: Gradient design with smooth animations
 
-- Python 3.9+
-- pip
-- Either Ollama or AWS credentials for Bedrock depending on the embedding/LLM provider you choose.
+## ?? Quick Start
+
+### Prerequisites
+
+- Python 3.11 (recommended) or 3.12
+- [Ollama](https://ollama.ai/) installed and running
+- Git
 
 ## Installation
 
 1. Create a virtual environment (recommended):
 
    ```bash
-   python -m venv .venv
-   . .venv\Scripts\Activate.ps1
+   # Windows PowerShell
+   py -3.11 -m venv .venv
+   .venv\Scripts\Activate.ps1
+
+   # macOS/Linux
+   python3 -m venv .venv
+   source .venv/bin/activate
    ```
 
 2. Install dependencies:
 
    ```bash
+   python -m pip install --upgrade pip
    pip install -r requirements.txt
    ```
 
-## Project layout
+3. Pull required Ollama models:
 
-- `data/` - Place PDF files here to be indexed.
-- `chroma/` - ChromaDB persistence directory created by `populate_database.py`.
-- `get_embedding_function.py` - Select and configure the embedding implementation (Bedrock, Ollama, etc.).
-- `populate_database.py` - Loads PDFs, splits into chunks, creates IDs and stores embeddings in Chroma.
-- `query_data.py` - Runs a similarity search, formats a prompt and queries an LLM for an answer.
-- `test_rag.py` - Small test harness that queries the system and uses an LLM to validate responses.
+   ```bash
+   ollama pull nomic-embed-text
+   ollama pull mistral
+   # Or: ollama pull llama3.2
+   ```
 
-## Usage
+4. Run the application:
 
-1. Prepare data
+   ```bash
+   python -m uvicorn app:app --reload --port 8000
+   ```
 
-   - Add one or more PDF files into the `data/` directory.
+5. Open your browser:
+   - Upload documents: http://localhost:8000
+   - Chat interface: http://localhost:8000/chat
 
-2. Populate the vector database
+## ?? Usage
 
-   - To create or update the Chroma DB:
+### Upload Documents
 
-     ```bash
-     python populate_database.py
-     ```
+1. Navigate to http://localhost:8000
+2. Select one or more PDF files
+3. (Optional) Check "Reset database" to clear existing data
+4. Click "Upload & Ingest"
+5. Monitor progress in the terminal
 
-   - To reset (clear) the database and re-create it from scratch:
+### Chat with Your Documents
 
-     ```bash
-     python populate_database.py --reset
-     ```
+1. Go to http://localhost:8000/chat
+2. Type your question
+3. Get AI-powered answers with source citations
+4. Responses stream in real-time!
 
-3. Query the database
+### CLI Query (Optional)
 
-   - Run a query from the command line:
+Run a query from the command line:
 
-     ```bash
-     python query_data.py "How much total money does a player start with in Monopoly?"
-     ```
+```bash
+python query_data.py "What is the main topic?"
+```
 
-   - The script will perform a similarity search, build a context prompt from the top results, and call the configured LLM.
+## ?? Project Structure
 
-4. Run tests
+- `app.py` - FastAPI application with chat and upload endpoints
+- `data/` - PDF files storage directory
+- `chroma/` - ChromaDB vector database
+- `get_embedding_function.py` - Ollama embedding wrapper
+- `populate_database.py` - Document ingestion and chunking
+- `query_data.py` - RAG query logic with streaming support
+- `templates/` - HTML templates for UI
+  - `index.html` - Upload page
+  - `chat.html` - Real-time chat interface
+  - `result.html` - Query result page
+- `test_rag.py` - Test harness
+- `requirements.txt` - Python dependencies
 
-   - Execute the simple test file with pytest:
+## ?? Configuration
 
-     ```bash
-     pytest test_rag.py
-     ```
+Set environment variables to customize:
 
-## Configuration notes
+```bash
+# Embedding model (default: nomic-embed-text)
+export OLLAMA_EMBED_MODEL="nomic-embed-text"
 
-- Embeddings / LLM configuration
+# LLM model (default: mistral)
+export OLLAMA_MODEL="llama3.2"
 
-  - Open `get_embedding_function.py` to choose which embedding implementation to use. The project currently uses `BedrockEmbeddings` by default. To use local Ollama embeddings, you can switch to `OllamaEmbeddings` instead.
+# Ollama base URL (default: http://localhost:11434)
+export OLLAMA_BASE_URL="http://localhost:11434"
+```
 
-  - `query_data.py` and `test_rag.py` use the `Ollama` model class from `langchain_community.llms.ollama` by default. Replace or adjust the model code if you want to use a different provider (e.g., an OpenAI or Bedrock LLM integration).
+## ?? Testing
 
-- Paths
+Run the setup test:
 
-  - The project uses `data/` for source PDFs and `chroma/` as the default ChromaDB persistence directory. These are defined as `DATA_PATH` and `CHROMA_PATH` in the scripts.
+```bash
+python test_setup.py
+```
 
-## Troubleshooting
+## ??? Technology Stack
 
-- If embeddings or the LLM fail to connect, confirm your provider configuration (Ollama server running, or AWS credentials/profile for Bedrock).
-- If you see no new documents being added, check that PDFs were placed under `data/` and that they contain extractable text.
+- **Backend**: FastAPI
+- **Vector Database**: ChromaDB
+- **LLM**: Ollama (Mistral, Llama3.2, etc.)
+- **Embeddings**: Nomic Embed Text
+- **PDF Processing**: pypdf
+- **Frontend**: HTML/CSS/JavaScript (Vanilla)
 
-## Contributing
+## ?? Contributing
 
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## ?? License
+
+This project is open source and available under the MIT License.
+
+## ????? Author
+
+**Somansh Shekhar**
+- GitHub: [@somanshushekhar](https://github.com/somanshushekhar)
+
+## ?? Acknowledgments
+
+- Built with [FastAPI](https://fastapi.tiangolo.com/)
+- Powered by [Ollama](https://ollama.ai/)
+- Vector search by [ChromaDB](https://www.trychroma.com/)
+
+---
+
+? Star this repo if you find it helpful!
 This is a small tutorial repository — feel free to open issues or submit PRs to improve examples or add additional providers.
 
 ## License

@@ -6,13 +6,12 @@ EVAL_PROMPT = """
 Expected Response: {expected_response}
 Actual Response: {actual_response}
 ---
-(Answer with 'true' or 'false') Does the actual response match the expected response? 
 """
 
 
 def test_monopoly_rules():
     assert query_and_validate(
-        question="How much total money does a player start with in Monopoly? (Answer with the number only)",
+        question="What does aflac",
         expected_response="$1500",
     )
 
@@ -31,7 +30,8 @@ def query_and_validate(question: str, expected_response: str):
     )
 
     ollama_model = os.environ.get("OLLAMA_MODEL", "mistral")
-    ollama_base_url = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434")
+   # ollama_base_url = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11435")
+    ollama_base_url = os.environ.get("OLLAMA_BASE_URL", "http://127.0.0.1:11435")
     model = Ollama(model=ollama_model, base_url=ollama_base_url)
     evaluation_results_str = model.invoke(prompt)
     evaluation_results_str_cleaned = evaluation_results_str.strip().lower()

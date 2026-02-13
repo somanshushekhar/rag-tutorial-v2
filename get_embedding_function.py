@@ -29,5 +29,5 @@ class OllamaEmbeddingsWrapper:
 def get_embedding_function():
     # Use Ollama embeddings running on your local Ollama server (no API keys required).
     model = os.environ.get("OLLAMA_EMBED_MODEL", "nomic-embed-text")
-    base_url = os.environ.get("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
+    base_url = os.environ.get("OLLAMA_BASE_URL", "http://127.0.0.1:11435")
     return OllamaEmbeddingsWrapper(model=model, base_url=base_url)

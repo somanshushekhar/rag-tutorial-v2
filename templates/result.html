@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Query Result</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 32px;
+        }
+
+        pre {
+            background: #f7f7f7;
+            padding: 12px;
+            border-radius: 6px;
+            white-space: pre-wrap;
+        }
+
+        
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 32px;
+        }
+
+        .box {
+            border: 1px solid #ddd;
+            padding: 16px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+        }
+
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .info {
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+    
+    </style>
+</head>
+<body>
+    <h1>Query Result</h1>
+    <p class="box info"><strong>Query:</strong> {{ query }}</p>
+    <h2>Answer</h2>
+    <pre class="box success">{{ answer }}</pre>
+
+    <p><a href="/">Back</a></p>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Aflac Assist</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 32px;
+        }
+
+        .box {
+            border: 1px solid #ddd;
+            padding: 16px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+        }
+
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .info {
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+    </style>
+    <script>
+        // Show status messages from URL parameters
+        window.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const messageDiv = document.getElementById('statusMessage');
+
+            if (urlParams.has('success')) {
+                if (urlParams.get('success') === 'uploaded') {
+                    messageDiv.className = 'success';
+                    messageDiv.innerHTML = '✅ Files uploaded successfully! Ingestion is running in the background. Check the terminal logs for progress.';
+                    messageDiv.style.display = 'block';
+                }
+            } else if (urlParams.has('error')) {
+                messageDiv.className = 'error';
+                messageDiv.innerHTML = '❌ Upload failed. Please try again.';
+                messageDiv.style.display = 'block';
+            }
+
+            // Auto-hide message after 10 seconds
+            if (messageDiv.style.display === 'block') {
+                setTimeout(function() {
+                    messageDiv.style.display = 'none';
+                    // Clean URL
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }, 10000);
+            }
+        });
+    </script>
+</head>
+<body>
+    <h1 class="box success">  <strong>💡</strong> Aflac Assist</h1>
+
+    <div id="statusMessage" style="display: none;"></div>
+
+    <div class="box">
+        <h2 class="info">Add to Knowledge base( only PDFs for now)</h2>
+        <form action="/upload" enctype="multipart/form-data" method="post">
+            <input type="file" name="files" accept=".pdf" multiple required />
+            <label>
+                <input type="checkbox" name="reset" value="true" /> Reset database before ingest (⚠️ removes all existing data)
+            </label>
+            <br /><br />
+            <button type="submit">Upload & Ingest (background)</button>
+        </form>
+        <p>Uploaded files are saved to the <code>data/</code> directory and ingestion runs in background.</p>
+        <div >
+            <strong>Note:</strong> Leave "Reset database" unchecked to add new documents to existing data.
+            Check it only if you want to start fresh.
+        </div>
+    </div>
+
+    <div class="box">
+        <h2 class="info">Query</h2>
+        <form action="/query" method="post">
+            <textarea name="query" rows="4" cols="80" placeholder="Ask a question..." required></textarea>
+            <br /><br />
+            <button type="submit">Run Query</button>
+        </form>
+        <p style="margin-top: 12px;">
+            <strong>💬 Or try the new <a href="/chat" style="color: #667eea; text-decoration: none; font-weight: 600;">Chat Interface</a> with streaming responses!</strong>
+        </p>
+    </div>
+
+    <div class="box">
+        <h2>Notes</h2>
+        <ul>
+            <li>Ingestion runs in background; check logs in the terminal where uvicorn is running.</li>
+            <li>TO-DO: Query runs synchronously. For long-running queries or streaming LLM output, need migrate to WebSockets or SSE.</li>
+            <li><strong>Incremental Updates:</strong> New documents are automatically added without removing existing data (unless you check "Reset database").</li>
+        </ul>
+    </div>
+</body>
+</html>
