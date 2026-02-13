@@ -1,0 +1,181 @@
+# Remove it
+rm -r .venv
+
+# Create with Python 3.11
+py -3.11-64 -m venv .venv
+
+# Activate
+.venv\Scripts\Activate.ps1
+
+# Verify you're using 3.11
+python --version
+
+# Install
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+
+uvicorn app:app --reload --host 0.0.0.0 --port 8000
+
+uvicorn app:app --reload OR python -m uvicorn app:app --reload --port 8000
+
+http://localhost:8000/query
+
+http://localhost:8000/chat
+
+----------------------------------------------------------------
+ChromaDB---
+7.	Prepare data: create data folder and put PDFs there:
+mkdir data
+# copy or move your PDF files into the 'data' directory
+
+8.	Populate the Chroma DB (create/update):
+python populate_database.py
+
+To reset/clear and re-create:
+python populate_database.py --reset
+
+9.	Query the RAG system:
+python query_data.py "What does Aflac do?"
+
+10.	Run the simple tests:
+pytest test_rag.py -q
+
+11.	When finished, deactivate the virtual environment:
+deactivate
+
+======================
+Ollama--
+PS C:\Users\ss> $env:OLLAMA_HOST = '127.0.0.1:11435'
+PS C:\Users\ss> $env:OLLAMA_MODEL = 'mistral'
+PS C:\Users\ss> $env:OLLAMA_EMBED_MODEL = 'nomic-embed-text'
+PS C:\Users\ss> ollama serve
+======================
+PS C:\Users\ss> ollama --version
+ollama version is 0.13.3
+PS C:\Users\ss> $env:OLLAMA_HOST = '127.0.0.1:11435'
+PS C:\Users\ss> ollama serve
+
+
+# 1. Make sure Ollama is installed and running
+# Check if Ollama is running:
+ollama list
+
+# 2. Pull the required models
+ollama pull nomic-embed-text
+ollama pull mistral
+
+# Or if you prefer llama3.2:
+ollama pull llama3.2
+
+---
+PS C:\Users\ss> ollama --version
+
+PS C:\Users\ss> ollama serve
+
+PS C:\Users\ss> curl 'http://127.0.0.1:11435'
+
+PS C:\Users\ss> ollama ls
+
+PS C:\Users\ss> ollama pull mistral
+
+PS C:\Users\ss> ollama pull nomic-embed-text
+
+http://127.0.0.1:11435/api/chat -d '{
+"model" "llama3",
+"prompt": "Merge the following bullets in meaningful sentence where the question is what does Aflac do? in 200 words:\n\n
+====================
+
+py populate_database.py --reset
+
+py query_data.py "What does Aflac do?"
+
+
+=========================================================######################===============================
+Below is a concise, correct sequence of commands to get the project running and accessible in the browser. I include both Windows (PowerShell) and UNIX shells and show the options: populate DB manually or use the FastAPI UI to upload PDFs.
+1.	Clone repo (if needed) and change into project
+git clone https://github.com/somanshushekhar/rag-tutorial-v2.git
+cd rag-tutorial-v2
+
+rm -r .venv
+-------------------------------------------------------------------------------
+2.	Create & activate a virtual environment
+•	PowerShell (Windows)
+# Lists all versions; look for the one that says '64bit'
+py -0p 
+
+# Create the venv using the 64-bit tag (if available) or the full path
+py -3.12-64 -m venv .venv
+
+.venv\Scripts\Activate.ps1
+python -c "import platform; print(platform.architecture()[0])"
+=================
+py -3.12 -m venv .venv
+.venv\Scripts\Activate.ps1
+
+•	Command Prompt (Windows)
+python -m venv .venv
+.venv\Scripts\activate
+
+•	macOS / Linux
+py -m venv .venv
+source .venv/bin/activate
+------------------------------------------------------------------------------
+3.	Install dependencies
+python.exe -m pip install --upgrade pip
+python -m pip install --upgrade pip setuptools wheel
+
+pip install -r requirements.txt
+
+
+########################################
+# Deactivate current venv
+deactivate
+
+# Remove it
+rm -r .venv
+
+# Create with Python 3.11
+py -3.11-64 -m venv .venv
+
+# Activate
+.venv\Scripts\Activate.ps1
+
+# Verify you're using 3.11
+python --version
+
+# Install
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+
+
+##################################
+
+4.	Optional: set Ollama env vars (if you use Ollama)
+•	PowerShell
+$env:OLLAMA_MODEL="mistral"
+$env:OLLAMA_BASE_URL="http://localhost:11434"
+•	Bash
+export OLLAMA_MODEL="mistral"
+export OLLAMA_BASE_URL="http://localhost:11434"
+
+5.	Option A — Pre-populate the Chroma DB from terminal (recommended for large batches)
+python populate_database.py        # adds new docs
+# or to clear DB first:
+python populate_database.py --reset
+
+6.	Option B — Start the FastAPI app and use the browser UI to upload PDFs and query
+uvicorn app:app --reload --host 0.0.0.0 --port 8000
+
+•	Open http://localhost:8000 in your browser
+•	Use the Upload form to add PDFs (you can check the Reset database box to clear before ingest). Upload triggers background ingestion.
+•	Use the Query form to run queries via the UI.
+7.	Query from CLI (alternate to UI)
+python query_data.py "What does the document say about X?"
+
+8.	Stop the server
+•	In the terminal running uvicorn: Ctrl+C
+
+•	If you run populate_database.py manually (step 5) you do not need to immediately upload via the UI — uvicorn can run afterwards and the UI will read from the same chroma persistence directory.
+•	For production, avoid running multiple uvicorn workers unless your Chroma and embedding providers are safe to use from multiple processes (single-process is simplest).
+•	If you get errors about missing packages, re-run pip install -r requirements.txt and share the traceback if issues persist.
+•	For long-running ingestion prefer Option B (upload via UI) or Option A with background job systems; both are supported by the code.
