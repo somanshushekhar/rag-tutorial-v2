@@ -40,7 +40,7 @@ def test_ollama():
     print("\nTesting Ollama connection...")
     try:
         import requests
-        response = requests.get("http://127.0.0.1:11435/api/tags", timeout=5)
+        response = requests.get("http://127.0.0.1:11434/api/tags", timeout=5)
         if response.status_code == 200:
             print("✓ Ollama is running and accessible")
             models = response.json().get("models", [])

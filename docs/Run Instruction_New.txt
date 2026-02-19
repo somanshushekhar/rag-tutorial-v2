@@ -45,7 +45,7 @@ deactivate
 
 ======================
 Ollama--
-PS C:\Users\ss> $env:OLLAMA_HOST = '127.0.0.1:11435'
+PS C:\Users\ss> $env:OLLAMA_HOST = '127.0.0.1:11434'
 PS C:\Users\ss> $env:OLLAMA_MODEL = 'mistral'
 PS C:\Users\ss> $env:OLLAMA_EMBED_MODEL = 'nomic-embed-text'
 PS C:\Users\ss> ollama serve

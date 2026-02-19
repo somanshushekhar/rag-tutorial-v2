@@ -36,3 +36,10 @@ data/*.pdf
 .coverage
 htmlcov/
 /.vs
+
+# AWS Deployment
+*.pem
+*.key
+.aws/
+*.tfstate
+*.tfstate.backup

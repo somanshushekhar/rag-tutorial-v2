@@ -111,7 +111,7 @@ def query_rag(query_text: str):
     prompt = PROMPT_TEMPLATE.format(context=context_text, question=query_text)
 
     ollama_model = os.environ.get("OLLAMA_MODEL", "mistral")
-    ollama_base_url = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11435")
+    ollama_base_url = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434")
 
     response_text = generate_with_ollama(prompt, ollama_model, ollama_base_url)
     response_text_clean = response_text.strip() if isinstance(response_text, str) else ""
